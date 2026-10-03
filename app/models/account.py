@@ -1,3 +1,11 @@
+
+## BankError(Exception) — общий предок для всех ошибок банка;
+## InvalidAmountError, InsufficientFundsError, EmailAlreadyExistsError — его наследники.
+
+
+
+
+
 class BankAccount: ## Чертеж счета
     
     def __init__(self, account_id, owner_email, balance=0):
@@ -7,13 +15,13 @@ class BankAccount: ## Чертеж счета
 
     def deposit(self, amount): #  def deposit(self, amount: float):
         if amount <= 0:
-            return False
+            raise ValueError("wrong amount")
         self._balance += amount
         return True
         
     def withdraw(self, amount): # def withdraw(self, amount: float):   
         if amount <= 0 or amount > self._balance:
-            return False
+            raise ValueError("wrong amount")
         self._balance = self._balance - amount
         return True
 
@@ -28,8 +36,9 @@ class Bank: # счертеж банка
 
     def open_account(self, owner_email):
         if owner_email in self.emails:
-            return None            # завтра станет raise
+            raise ValueError("Email booked")         
         account_id = self._next_id
+        self._next_id += 1
         account = BankAccount(account_id, owner_email)
         self.accounts[account_id] = account
         self.emails.add(owner_email)
@@ -42,6 +51,9 @@ class Bank: # счертеж банка
 bank = Bank()
 a = bank.open_account("a@b.com")
 print(a.account_id)                    # 1
-print(bank.open_account("a@b.com"))    # None — почта занята
+try:
+    bank.open_account("a@b.com")
+except ValueError as e:
+    print("ошибка:", e)    # None -> почта занята
 a.deposit(100)
 print(a.withdraw(30), a.get_balance()) # True 70
