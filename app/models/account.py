@@ -1,9 +1,7 @@
 
 ## BankError(Exception) — общий предок для всех ошибок банка;
 ## InvalidAmountError, InsufficientFundsError, EmailAlreadyExistsError — его наследники.
-
-
-
+from contextlib import contextmanager
 
 
 class BankAccount: ## Чертеж счета
@@ -43,7 +41,31 @@ class Bank: # счертеж банка
         self.accounts[account_id] = account
         self.emails.add(owner_email)
         return account
-        
+    
+    def transfer(self, from_id, to_id, amount):
+        with atomic(self):
+            if from_id not in self.accounts:
+                raise AccountNotFoundError
+            snapshot[acc_id] - amount
+            sender = self.accounts[from_id]
+            sender.withdraw(amount)    
+
+
+
+@contextmanager
+def atomic(bank):
+    #снимок для каждого счёта запоминаем баланс
+    snapshot = {}
+    for acc_id, acc in bank.accounts.items():
+        snapshot[acc_id] = acc._balance
+
+    try:
+        yield                                  # здесь выполняется блок with
+    except Exception:
+        # 3. упало - возвращаем всем счетам старые балансы
+        for acc_id, old_balance in snapshot.items():
+            bank.accounts[acc_id]._balance = old_balance
+        raise                                  # сообщаем об ошибке выше
         
 
 
