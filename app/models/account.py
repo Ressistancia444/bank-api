@@ -27,12 +27,20 @@ class BankAccount: ## Чертеж счета
         self._balance = balance
 
     def deposit(self, amount): #  def deposit(self, amount: float):
+        if isinstance(amount,int):
+           return True
+        else:
+            raise InvalidAmountError("Not correct type of amount")
         if amount <= 0:
             raise  InvalidAmountError("Amount must be positive")
         self._balance += amount
         return True
         
     def withdraw(self, amount): # def withdraw(self, amount: float):   
+        if not isinstance(amount,int,float):
+           raise InvalidAmountError("Not correct type of amount")
+        else:
+            print("")
         if amount <= 0:
             raise InvalidAmountError("Amount must be positive")
         if amount > self._balance:
