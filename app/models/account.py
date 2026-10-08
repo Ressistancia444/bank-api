@@ -38,7 +38,7 @@ class BankAccount: ## Чертеж счета
         # if isinstance(amount,bool):
         #     raise InvalidAmountError("Amount must be a number")
         if type(amount) not in (int, float): # isinstance(amount,(int,float)) #проверка отсекает bool поэтому проверка на нее не нужна 
-            raise InvalidAmountError
+            raise InvalidAmountError("Not correct type of amount")
         if amount <= 0:
              raise InvalidAmountError("Amount must be positive")
         if amount > self._balance:
@@ -48,7 +48,13 @@ class BankAccount: ## Чертеж счета
 
     def get_balance(self):
         return self._balance
-
+    
+    def __repr__(self):
+        return f"BankAccount(account_id ={self.account_id}, owner_email='{self.owner_email}', balance={self._balance})"
+    
+    def __str__(self):
+        return f"Account {self.account_id} ({self.owner_email}): {self._balance}"
+        
 class Bank: # счертеж банка
     def __init__(self):
         self.accounts = {}
@@ -75,6 +81,9 @@ class Bank: # счертеж банка
                 raise AccountNotFoundError("Account not found")
             recipient = self.accounts[to_id]
             recipient.deposit(amount)
+    
+    def __repr__(self):
+        return f"Bank(accounts={len(self.accounts)}, {self.email})"
 
 
 
@@ -120,7 +129,10 @@ for bad in ["100", True, -5]:
         print("ок, отклонено:", bad)
 a.deposit(10.5)
 print(a.get_balance())   # 80.5
-
+print(a)          #__str__
+print([a])        # __repr__
+print(repr(a))
+print(bank)
 
 
 #  if not isinstance(amount,int,float):
