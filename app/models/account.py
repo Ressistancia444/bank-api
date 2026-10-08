@@ -27,9 +27,7 @@ class BankAccount: ## Чертеж счета
         self._balance = balance
 
     def deposit(self, amount): #  def deposit(self, amount: float):
-        if isinstance(amount,int):
-           return True
-        else:
+        if type(amount) not in (int, float):
             raise InvalidAmountError("Not correct type of amount")
         if amount <= 0:
             raise  InvalidAmountError("Amount must be positive")
@@ -37,14 +35,14 @@ class BankAccount: ## Чертеж счета
         return True
         
     def withdraw(self, amount): # def withdraw(self, amount: float):   
-        if not isinstance(amount,int,float):
-           raise InvalidAmountError("Not correct type of amount")
-        else:
-            print("")
+        # if isinstance(amount,bool):
+        #     raise InvalidAmountError("Amount must be a number")
+        if type(amount) not in (int, float): # isinstance(amount,(int,float)) #проверка отсекает bool поэтому проверка на нее не нужна 
+            raise InvalidAmountError
         if amount <= 0:
-            raise InvalidAmountError("Amount must be positive")
+             raise InvalidAmountError("Amount must be positive")
         if amount > self._balance:
-            raise InsufficientFundsError("Insufficient funds in the account")
+             raise InsufficientFundsError("Insufficient funds in the account")
         self._balance -= amount
         return True
 
@@ -101,7 +99,6 @@ def atomic(bank):
 
 
 
-
 bank = Bank()
 a = bank.open_account("a@b.com")
 print(a.account_id)                    # 1
@@ -116,3 +113,23 @@ try:
 except AccountNotFoundError as e:
     print("ошибка:", type(e).__name__)
 print(a.get_balance())   # 70
+for bad in ["100", True, -5]:
+    try:
+        a.deposit(bad)
+    except InvalidAmountError as e:
+        print("ок, отклонено:", bad)
+a.deposit(10.5)
+print(a.get_balance())   # 80.5
+
+
+
+#  if not isinstance(amount,int,float):
+#            raise InvalidAmountError("Not correct type of amount")
+#         else:
+#             print("")
+#         if amount <= 0:
+#             raise InvalidAmountError("Amount must be positive")
+#         if amount > self._balance:
+#             raise InsufficientFundsError("Insufficient funds in the account")
+#         self._balance -= amount
+#         return True
