@@ -50,10 +50,15 @@ class BankAccount: ## Чертеж счета
         return self._balance
     
     def __repr__(self):
-        return f"BankAccount(account_id ={self.account_id}, owner_email='{self.owner_email}', balance={self._balance})"
+        return f"BankAccount(account_id={self.account_id}, owner_email='{self.owner_email}', balance={self._balance})"
     
     def __str__(self):
         return f"Account {self.account_id} ({self.owner_email}): {self._balance}"
+    
+    def __eq__(self, other):
+        if not isinstance(other, BankAccount):
+            return NotImplemented
+            return self.account_id == other.account_id
         
 class Bank: # счертеж банка
     def __init__(self):
@@ -83,7 +88,13 @@ class Bank: # счертеж банка
             recipient.deposit(amount)
     
     def __repr__(self):
-        return f"Bank(accounts={len(self.accounts)}, {self.email})"
+        return f"Bank(accounts={len(self.accounts)})"
+
+    def __len__(self):
+        return len(self.accounts)
+        
+    def __contains__(self, account_id) -> bool:
+        return account_id in self.accounts
 
 
 
@@ -129,11 +140,16 @@ for bad in ["100", True, -5]:
         print("ок, отклонено:", bad)
 a.deposit(10.5)
 print(a.get_balance())   # 80.5
-print(a)          #__str__
+print(a)          #__str__-
 print([a])        # __repr__
 print(repr(a))
 print(bank)
-
+print(len(bank))               # 1
+print(1 in bank, 999 in bank)  # True False
+b = bank.open_account("c@d.com")
+print(len(bank))               # 2
+print(a == b, a == a)          # False True
+print(a == "строка")           # False
 
 #  if not isinstance(amount,int,float):
 #            raise InvalidAmountError("Not correct type of amount")
