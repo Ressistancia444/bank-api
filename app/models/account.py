@@ -57,8 +57,8 @@ class BankAccount: ## Чертеж счета
     
     def __eq__(self, other):
         if not isinstance(other, BankAccount):
-            return NotImplemented
-            return self.account_id == other.account_id
+             return NotImplemented
+        return self.account_id == other.account_id
         
 class Bank: # счертеж банка
     def __init__(self):
@@ -108,7 +108,7 @@ def atomic(bank):
     try:
         yield                                  # тут выполняется блок with
     except Exception:
-        # 3. упало - возвращаем всем счетам старые балансы
+        # 3. упало возвращаем всем счетам старые балансы
         for acc_id, old_balance in snapshot.items():
             bank.accounts[acc_id]._balance = old_balance
         raise                                  # сообщаем об ошибке выше
